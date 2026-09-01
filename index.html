@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Art History Resources</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="app.js?v=2" defer></script>
+  <link rel="stylesheet" href="styles.css?v=2">
+  <script src="app.js?v=3" defer></script>
 </head>
 <body>
   <header class="hero">
@@ -19,7 +19,7 @@
         <svg class="daisy" viewBox="0 0 240 240" role="img" aria-label="Daisy">
           <g transform="translate(120 120)">
             <g fill="#f9f5e9" stroke="#292c22" stroke-width="2">
-              <ellipse rx="27" ry="67" transform="rotate(0) translate(0 -64)"/><ellipse rx="27" ry="67" transform="rotate(45) translate(0 -64)"/><ellipse rx="27" ry="67" transform="rotate(90) translate(0 -64)"/><ellipse rx="27" ry="67" transform="rotate(135) translate(0 -64)"/>
+              <ellipse class="signal-petal" rx="27" ry="67" transform="rotate(0) translate(0 -64)"/><ellipse rx="27" ry="67" transform="rotate(45) translate(0 -64)"/><ellipse rx="27" ry="67" transform="rotate(90) translate(0 -64)"/><ellipse rx="27" ry="67" transform="rotate(135) translate(0 -64)"/>
             </g>
             <circle r="39" fill="#e7b643" stroke="#292c22" stroke-width="3"/>
           </g>
@@ -27,13 +27,13 @@
         <svg class="sunflower" viewBox="0 0 240 240" role="img" aria-label="Sunflower">
           <g transform="translate(120 120)">
             <g fill="#efb21b" stroke="#614517" stroke-width="2">
-              <ellipse rx="25" ry="65" transform="rotate(0) translate(0 -62)"/><ellipse rx="25" ry="65" transform="rotate(30) translate(0 -62)"/><ellipse rx="25" ry="65" transform="rotate(60) translate(0 -62)"/><ellipse rx="25" ry="65" transform="rotate(90) translate(0 -62)"/><ellipse rx="25" ry="65" transform="rotate(120) translate(0 -62)"/><ellipse rx="25" ry="65" transform="rotate(150) translate(0 -62)"/>
+              <ellipse class="signal-petal" rx="25" ry="65" transform="rotate(0) translate(0 -62)"/><ellipse rx="25" ry="65" transform="rotate(30) translate(0 -62)"/><ellipse rx="25" ry="65" transform="rotate(60) translate(0 -62)"/><ellipse rx="25" ry="65" transform="rotate(90) translate(0 -62)"/><ellipse rx="25" ry="65" transform="rotate(120) translate(0 -62)"/><ellipse rx="25" ry="65" transform="rotate(150) translate(0 -62)"/>
             </g>
             <circle r="46" fill="#5b3a1e" stroke="#292c22" stroke-width="3"/><circle r="30" fill="#76502a" stroke="#d69b21" stroke-width="3" stroke-dasharray="2 7"/>
           </g>
         </svg>
       </button>
-      <p id="flower-status" class="flower-status" aria-live="polite">Press the daisy to send a little signal.</p>
+      <p id="flower-status" class="sr-only" aria-live="polite">Press the flower to send a little signal.</p>
     </div>
   </header>
 
