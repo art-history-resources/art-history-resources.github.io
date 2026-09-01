@@ -1,6 +1,7 @@
 const API = 'https://art-flower-relay.oreillybeaufieldpark.workers.dev';
 const flower = document.querySelector('#flower');
 const status = document.querySelector('#flower-status');
+const DEVICE_TOKEN_KEY = 'artFlowerDeviceToken';
 
 async function refreshFlower() {
   try {
@@ -11,9 +12,9 @@ async function refreshFlower() {
     flower.classList.toggle('changed', changed);
     if (!flower.classList.contains('pending')) flower.disabled = false;
     if (changed) {
-      flower.setAttribute('aria-label', 'Enter the PIN and change the sunflower to a daisy');
+      flower.setAttribute('aria-label', 'Change the sunflower to a daisy');
     } else {
-      flower.setAttribute('aria-label', 'Enter the PIN and change the daisy to a sunflower');
+      flower.setAttribute('aria-label', 'Change the daisy to a sunflower');
     }
     if (!flower.classList.contains('pending')) status.textContent = `The Pi says ${changed ? 'sunflower' : 'daisy'}. Press it to change.`;
     return state.flower;
@@ -35,8 +36,9 @@ async function waitForChange(previousFlower) {
 
 flower.addEventListener('click', async () => {
   if (flower.disabled) return;
-  const pin = window.prompt('Enter the PIN to send the signal:');
-  if (pin === null) return;
+  const deviceToken = window.localStorage.getItem(DEVICE_TOKEN_KEY);
+  const pin = deviceToken ? null : window.prompt('Enter the PIN to authorise this browser:');
+  if (!deviceToken && pin === null) return;
   const previousFlower = flower.classList.contains('changed') ? 'sunflower' : 'daisy';
   flower.disabled = true;
   flower.classList.add('pending');
@@ -45,10 +47,14 @@ flower.addEventListener('click', async () => {
     const response = await fetch(`${API}/press`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pin }),
+      body: JSON.stringify(deviceToken ? { deviceToken } : { pin }),
     });
     const result = await response.json();
-    if (!response.ok) throw new Error(result.error || 'The request was not accepted.');
+    if (!response.ok) {
+      if (deviceToken && response.status === 401) window.localStorage.removeItem(DEVICE_TOKEN_KEY);
+      throw new Error(deviceToken && response.status === 401 ? 'Authorisation expired. Press again to enter the PIN.' : result.error || 'The request was not accepted.');
+    }
+    if (result.deviceToken) window.localStorage.setItem(DEVICE_TOKEN_KEY, result.deviceToken);
     status.textContent = 'Accepted. Waiting for the Pi to send the email…';
     const changed = await waitForChange(previousFlower);
     if (!changed) throw new Error('The Pi has not confirmed the email yet. Please try again later.');
