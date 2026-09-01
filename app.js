@@ -9,18 +9,20 @@ async function refreshFlower() {
     const state = await response.json();
     const changed = state.flower === 'sunflower';
     flower.classList.toggle('changed', changed);
-    flower.disabled = changed;
+    flower.disabled = false;
     if (changed) {
-      flower.setAttribute('aria-label', 'The signal was sent; the flower is now a sunflower');
-      status.textContent = 'Your signal was sent.';
+      flower.setAttribute('aria-label', 'Enter the PIN and change the sunflower to a daisy');
+    } else {
+      flower.setAttribute('aria-label', 'Enter the PIN and change the daisy to a sunflower');
     }
+    if (!flower.classList.contains('sending')) status.textContent = `The Pi says ${changed ? 'sunflower' : 'daisy'}. Press it to change.`;
   } catch {
     status.textContent = 'The flower state is temporarily unavailable.';
   }
 }
 
 flower.addEventListener('click', async () => {
-  if (flower.classList.contains('changed') || flower.disabled) return;
+  if (flower.disabled) return;
   const pin = window.prompt('Enter the PIN to send the signal:');
   if (pin === null) return;
   flower.disabled = true;
@@ -37,7 +39,7 @@ flower.addEventListener('click', async () => {
     status.textContent = 'Accepted. Waiting for the Pi to send the email…';
     window.setTimeout(async () => {
       await refreshFlower();
-      if (!flower.classList.contains('changed')) flower.disabled = false;
+      flower.disabled = false;
     }, 65000);
   } catch (error) {
     flower.disabled = false;
